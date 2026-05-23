@@ -9,6 +9,7 @@
     "@react-navigation/stack": "^7.9.2",
     "expo": "~56.0.3",
     "expo-av": "^16.0.8",
+    "expo-dev-client": "~56.0.14",
     "expo-haptics": "~56.0.3",
     "expo-notifications": "^56.0.12",
     "expo-status-bar": "~56.0.4",
