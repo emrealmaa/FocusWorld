@@ -1,8 +1,8 @@
-import { Audio } from 'expo-av';
+import { createAudioPlayer } from 'expo-audio';
 
-// Place .mp3 files in assets/sounds/ to activate each sound.
-// All operations fail silently — missing files won't crash the app.
-const SOUND_MAP = {
+// Place real .mp3 files in assets/sounds/ to activate sounds.
+// All calls fail silently — missing or invalid files won't crash the app.
+const SOURCES = {
   session_complete: require('../../assets/sounds/session_complete.mp3'),
   level_up:         require('../../assets/sounds/level_up.mp3'),
   achievement:      require('../../assets/sounds/achievement.mp3'),
@@ -10,45 +10,27 @@ const SOUND_MAP = {
   coop_start:       require('../../assets/sounds/coop_start.mp3'),
 };
 
-// Cache loaded Sound objects to avoid reloading on every play
-const cache = {};
+// Cache player instances so we can seek-and-replay without reloading
+const players = {};
 
-const loadAndPlay = async (key) => {
+const play = (key) => {
   try {
-    if (!SOUND_MAP[key]) return;
-
-    // Reuse cached instance when possible
-    if (cache[key]) {
-      await cache[key].setPositionAsync(0);
-      await cache[key].playAsync();
+    if (players[key]) {
+      players[key].seekTo(0);
+      players[key].play();
       return;
     }
-
-    const { sound } = await Audio.Sound.createAsync(SOUND_MAP[key], { shouldPlay: true });
-    cache[key] = sound;
-
-    // Auto-unload after playback to free memory if we start accumulating
-    sound.setOnPlaybackStatusUpdate((status) => {
-      if (status.didJustFinish && !status.isLooping) {
-        // keep in cache for next play — don't unload
-      }
-    });
-  } catch {
-    // Missing file or audio session error — ignore
-  }
-};
-
-export const playSessionComplete = () => loadAndPlay('session_complete');
-export const playLevelUp         = () => loadAndPlay('level_up');
-export const playAchievement     = () => loadAndPlay('achievement');
-export const playZoneDiscover    = () => loadAndPlay('zone_discover');
-export const playCoopStart       = () => loadAndPlay('coop_start');
-
-export const configureAudio = async () => {
-  try {
-    await Audio.setAudioModeAsync({
-      playsInSilentModeIOS: false,
-      staysActiveInBackground: false,
-    });
+    const player = createAudioPlayer(SOURCES[key]);
+    players[key] = player;
+    player.play();
   } catch {}
 };
+
+export const playSessionComplete = () => play('session_complete');
+export const playLevelUp         = () => play('level_up');
+export const playAchievement     = () => play('achievement');
+export const playZoneDiscover    = () => play('zone_discover');
+export const playCoopStart       = () => play('coop_start');
+
+// No-op — expo-audio handles audio session automatically
+export const configureAudio = async () => {};
