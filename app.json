@@ -1,0 +1,37 @@
+{
+  "expo": {
+    "name": "FocusWorld",
+    "slug": "FocusWorld",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#0A0F1E",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.focusworld.app"
+    },
+    "android": {
+      "package": "com.focusworld.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#0A0F1E",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-notifications",
+      "expo-av"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "27b311d6-f4b3-4936-8564-0d71f697adeb"
+      }
+    },
+    "owner": "emrealmaa"
+  }
+}
